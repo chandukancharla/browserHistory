@@ -1,5 +1,5 @@
 import './App.css'
-import Component from 'react'
+import {Component} from 'react'
 import ListCreator from './listCreator'
 
 // These are the list used in the application. You can move them to any component needed.
@@ -83,6 +83,7 @@ const initialHistoryList = [
 class App extends Component {
   state = {
     searchInput: '',
+    historyList: initialHistoryList,
   }
 
   changeList = event => {
@@ -91,10 +92,16 @@ class App extends Component {
     })
   }
 
+  deleteHistory = id => {
+    const {historyList} = this.state
+    const filteredList = historyList.filter(each => each.id !== id)
+    this.setState({historyList: filteredList})
+  }
+
   render() {
-    const {searchInput} = this.state
-    const searchResults = initialHistoryList.filter(each =>
-      each.title.includes(searchInput),
+    const {searchInput, historyList} = this.state
+    const searchResults = historyList.filter(each =>
+      each.title.toLowerCase().includes(searchInput.toLowerCase()),
     )
     return (
       <div className="container">
@@ -127,7 +134,11 @@ class App extends Component {
           <div className="history-list-container">
             <ul className="history-list">
               {searchResults.map(each => (
-                <ListCreator historyDetails={each} key={each.id} />
+                <ListCreator
+                  historyDetails={each}
+                  key={each.id}
+                  deleteHistory={this.deleteHistory}
+                />
               ))}
             </ul>
           </div>
