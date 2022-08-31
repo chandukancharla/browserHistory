@@ -103,6 +103,23 @@ class App extends Component {
     const searchResults = historyList.filter(each =>
       each.title.toLowerCase().includes(searchInput.toLowerCase()),
     )
+    const authorization = searchResults.length() !== 0
+    const noHistory = (
+      <div>
+        <p className="noHistory">There is no history to show</p>
+      </div>
+    )
+    const authFullList = (
+      <ul className="history-list">
+        {searchResults.map(each => (
+          <ListCreator
+            historyDetails={each}
+            key={each.id}
+            deleteHistory={this.deleteHistory}
+          />
+        ))}
+      </ul>
+    )
     return (
       <div className="container">
         <div className="top-container">
@@ -132,15 +149,8 @@ class App extends Component {
         </div>
         <div className="history-container">
           <div className="history-list-container">
-            <ul className="history-list">
-              {searchResults.map(each => (
-                <ListCreator
-                  historyDetails={each}
-                  key={each.id}
-                  deleteHistory={this.deleteHistory}
-                />
-              ))}
-            </ul>
+            {authorization && {noHistory}}
+            {!authorization && {authFullList}}
           </div>
         </div>
       </div>
